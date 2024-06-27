@@ -1,0 +1,26 @@
+import { PiMapPinFill, PiShoppingCartFill } from "react-icons/pi";
+import { LogoHeader } from "../../assets/logo";
+import { Link } from "react-router-dom";
+
+import { HeaderContainer, HeaderContent } from "./styles";
+
+export function Header() {
+  return (
+    <HeaderContainer>
+      <Link to={"/"}>
+        <LogoHeader />
+      </Link>
+
+      <HeaderContent>
+        <div>
+          <PiMapPinFill size={22} />
+          <span>Curitiba, PR</span>
+        </div>
+        <Link to={"/"}>
+          <PiShoppingCartFill size={22} />
+          <span>2</span>
+        </Link>
+      </HeaderContent>
+    </HeaderContainer>
+  );
+}
