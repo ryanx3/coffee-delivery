@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components";
+import { mixins } from "./mixins";
 
 export const GlobalStyle = createGlobalStyle`
   * {
@@ -14,13 +15,18 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   body, input, textarea, button {
-    font-family: 'Roboto', sans-serif;
-    font-size: 1rem;
-    font-weight: 400;
+     ${mixins.fonts.textM};
   }
 
-  button {
-    border: none;
+ button, a {
+  
     cursor: pointer;
+    text-decoration: none;
+    border: none;
+    transition: filter 0.1s ease;
+
+    &:hover {
+      filter: brightness(1.05);
+    }
   }
 `;
