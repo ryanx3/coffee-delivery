@@ -22,24 +22,23 @@ export const HeaderContent = styled.div`
     border-radius: 6px;
     padding: 0.625rem;
     gap: 0.25rem;
-    background-color: ${(props) => props.theme.colors["purple-light"]};
+    background-color: ${({ theme }) => theme.colors["purple-light"]};
 
     svg {
-      fill: ${(props) => props.theme.colors.purple};
+      fill: ${({ theme }) => theme.colors.purple};
     }
   }
 
   > a {
-    background-color: ${(props) => props.theme.colors["yellow-light"]};
+    background-color: ${({ theme }) => theme.colors["yellow-light"]};
     padding: 0.5rem;
     border-radius: 6px;
     position: relative;
 
     svg {
-      fill: ${(props) => props.theme.colors["yellow-dark"]};
+      fill: ${({ theme }) => theme.colors["yellow-dark"]};
 
       &:hover {
-        
       }
     }
 
