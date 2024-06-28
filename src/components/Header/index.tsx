@@ -2,7 +2,7 @@ import { PiMapPinFill, PiShoppingCartFill } from "react-icons/pi";
 import { LogoHeader } from "../../assets/logo";
 import { Link } from "react-router-dom";
 
-import { HeaderContainer, HeaderContent } from "./styles";
+import { HeaderContainer, HeaderNav } from "./styles";
 
 export function Header() {
   return (
@@ -11,7 +11,7 @@ export function Header() {
         <LogoHeader />
       </Link>
 
-      <HeaderContent>
+      <HeaderNav>
         <div>
           <PiMapPinFill size={22} />
           <span>Curitiba, PR</span>
@@ -20,7 +20,7 @@ export function Header() {
           <PiShoppingCartFill size={22} />
           <span>2</span>
         </Link>
-      </HeaderContent>
+      </HeaderNav>
     </HeaderContainer>
   );
 }
