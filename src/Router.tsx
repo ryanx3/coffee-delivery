@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 
 import { Home } from "./pages/Home";
-import { AppLayout } from "./Layouts/AppLayout";
+import { AppLayout } from "./Layouts/AppLayout/default";
 
 export function Router() {
   return (
