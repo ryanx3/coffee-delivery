@@ -1,5 +1,34 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { mixins } from "../../../../styles/mixins";
+
+const fadeInUp = keyframes`
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const typing = keyframes`
+  from {
+    width: 1ch;
+  }
+  to {
+    width: 100%;
+  }
+`;
+
+const blinkCursor = keyframes`
+  from {
+    border-right-color: transparent;
+  }
+  to {
+    border-right-color: black;
+  }
+`;
 
 export const HeroContainer = styled.section`
   position: relative;
@@ -9,7 +38,7 @@ export const HeroContainer = styled.section`
     position: absolute;
     top: 0;
     left: 50%;
-    transform: translate(-50%);
+    transform: translateX(-50%);
     z-index: -1;
     width: 100%;
   }
@@ -19,6 +48,7 @@ export const Content = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  animation: ${fadeInUp} 1s ease-out forwards;
 `;
 
 export const Title = styled.div`
@@ -34,6 +64,14 @@ export const Title = styled.div`
   > span {
     ${mixins.fonts.textL}
     color: ${({ theme }) => theme.colors["base-subtitle"]};
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 0.15em solid black;
+    animation:
+      ${typing} 3s steps(60) normal,
+      ${blinkCursor} 1s steps(60) infinite normal;
+    display: inline-block;
+    max-width: fit-content;
   }
 `;
 
@@ -57,4 +95,9 @@ export const Items = styled.div`
       color: ${({ theme }) => theme.colors["base-text"]};
     }
   }
+`;
+
+export const AnimatedImage = styled.img`
+  animation: ${fadeInUp} 1s ease-out forwards;
+  opacity: 0;
 `;
