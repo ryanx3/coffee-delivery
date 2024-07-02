@@ -8,7 +8,6 @@ export function Home() {
   return (
     <HomeContainer>
       <HeroSection />
-      <main>
         <ContentSection>
           <header>
             <h2>Nossos cafés</h2>
@@ -30,7 +29,6 @@ export function Home() {
             <Card />
           </CardWrapper>
         </ContentSection>
-      </main>
     </HomeContainer>
   );
 }
