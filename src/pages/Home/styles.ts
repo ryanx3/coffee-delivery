@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { mixins } from "../../styles/mixins";
 
-export const HomeContainer = styled.div``;
+export const HomeContainer = styled.main``;
 
 export const ContentSection = styled.section`
   > header {
