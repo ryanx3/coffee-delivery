@@ -5,7 +5,7 @@ export const HeaderContainer = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 2rem;
+  padding: 2rem 0;
 `;
 
 export const HeaderNav = styled.nav`
@@ -31,6 +31,10 @@ export const HeaderNav = styled.nav`
     padding: 0.5rem;
     border-radius: 6px;
     position: relative;
+
+    &:hover {
+      filter: brightness(0.9);
+    }
 
     svg {
       fill: ${({ theme }) => theme.colors["yellow-dark"]};

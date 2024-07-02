@@ -8,7 +8,7 @@ export function Header() {
   return (
     <HeaderContainer>
       <Link to={"/"}>
-        <LogoHeader />
+        <LogoHeader/>
       </Link>
 
       <HeaderNav>
@@ -16,7 +16,7 @@ export function Header() {
           <PiMapPinFill size={22} />
           <span>Curitiba, PR</span>
         </div>
-        <Link to={"/"}>
+        <Link to={"/checkout"}>
           <PiShoppingCartFill size={22} />
           <span>2</span>
         </Link>
