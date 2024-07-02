@@ -9,7 +9,7 @@ import {
 
 import HeroImage from "../../../../assets/hero-img.png";
 import HeroBackground from "../../../../assets/bg-hero.png";
-import { HeroContainer, Content, Title, Items } from "./styles";
+import { HeroContainer, Content, Title, Items, AnimatedImage } from "./styles";
 
 export function HeroSection() {
   const theme = useTheme();
@@ -26,7 +26,7 @@ export function HeroSection() {
 
             <span>
               Com o Coffee Delivery você recebe seu café onde estiver, a
-              qualquer hora
+              qualquer hora...
             </span>
           </Title>
 
@@ -69,7 +69,7 @@ export function HeroSection() {
           </Items>
         </div>
 
-        <img src={HeroImage} alt="Café do Coffee Delivery" />
+        <AnimatedImage src={HeroImage} alt="Café do Coffee Delivery" />
       </Content>
     </HeroContainer>
   );
