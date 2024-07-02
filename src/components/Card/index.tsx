@@ -1,6 +1,8 @@
 import { PiShoppingCartFill } from "react-icons/pi";
+import coffee from "../../assets/coffee.png";
 
 import { Tag } from "../Tag";
+import { Counter } from "../Counter";
 
 import {
   ButtonCart,
@@ -12,9 +14,6 @@ import {
   Tags,
   Title,
 } from "./styles";
-
-import coffee from "../../assets/coffee.png";
-import { Counter } from "../Counter";
 
 export function Card() {
   return (

@@ -1,5 +1,3 @@
-
-
 export function LogoHeader() {
   return (
     <svg
