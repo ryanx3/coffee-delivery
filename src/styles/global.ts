@@ -8,9 +8,23 @@ export const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
 
+  :root {
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      background-color: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: ${({theme}) => theme.colors.purple};
+      border-radius: 5px;
+      bottom: 0;
+    }
+  }
+
   body {
-    background: ${({theme}) => theme.colors.background};
-    color: ${({theme}) => theme.colors["base-text"]};
+    background: ${({ theme }) => theme.colors.background};
+    color: ${({ theme }) => theme.colors["base-text"]};
     -webkit-font-smoothing: antialiased;
   }
 
@@ -23,10 +37,6 @@ export const GlobalStyle = createGlobalStyle`
     cursor: pointer;
     text-decoration: none;
     border: none;
-    transition: filter 0.1s ease;
-
-    &:hover {
-      filter: brightness(1.05);
-    }
+ 
   }
 `;
