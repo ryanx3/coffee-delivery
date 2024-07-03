@@ -28,6 +28,7 @@ import {
   CartTotalPrice,
 } from "./styles";
 import { Counter } from "../../components/Counter";
+import { priceFormatter } from "../../utils/formatter";
 
 export function Checkout() {
   return (
@@ -112,61 +113,25 @@ export function Checkout() {
               </CoffeeInfo>
             </div>
 
-            <span className="coffee-price">R$ 9,90</span>
-          </CoffeeWrapper>
-          <CoffeeWrapper>
-            <div>
-              <img src={coffee} alt="" />
-
-              <CoffeeInfo>
-                <span>Café tradicional</span>
-                <div>
-                  <Counter quantity={1} />
-
-                  <ButtonRemove>
-                    <PiTrash />
-                    <span>Remover</span>
-                  </ButtonRemove>
-                </div>
-              </CoffeeInfo>
-            </div>
-
-            <span className="coffee-price">R$ 9,90</span>
-          </CoffeeWrapper>
-          <CoffeeWrapper>
-            <div>
-              <img src={coffee} alt="" />
-
-              <CoffeeInfo>
-                <span>Café tradicional</span>
-                <div>
-                  <Counter quantity={1} />
-
-                  <ButtonRemove>
-                    <PiTrash />
-                    <span>Remover</span>
-                  </ButtonRemove>
-                </div>
-              </CoffeeInfo>
-            </div>
-
-            <span className="coffee-price">R$ 9,90</span>
+            <span className="coffee-price">
+              R$ {priceFormatter.format(9.98)}
+            </span>
           </CoffeeWrapper>
 
           <CartTotalPrice>
             <div>
               <span>Total de itens</span>
-              <span>R$9,99</span>
+              <span>R${priceFormatter.format(9.98)}</span>
             </div>
 
             <div>
               <span>Entrega</span>
-              <span>R$3,99</span>
+              <span>R${priceFormatter.format(3.99)}</span>
             </div>
 
             <div>
               <span>Total</span>
-              <span>R$25,90</span>
+              <span>R${priceFormatter.format(25.90)}</span>
             </div>
           </CartTotalPrice>
 
