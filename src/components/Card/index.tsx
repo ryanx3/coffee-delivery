@@ -14,6 +14,7 @@ import {
   Tags,
   Title,
 } from "./styles";
+import { priceFormatter } from "../../utils/formatter";
 
 export function Card() {
   return (
@@ -32,7 +33,7 @@ export function Card() {
       <OrderContainer>
         <Price>
           <span>R$</span>
-          <span>19,98</span>
+          <span>{priceFormatter.format(12.99)}</span>
         </Price>
 
         <div className="buy-content">
