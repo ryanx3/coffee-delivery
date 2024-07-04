@@ -86,5 +86,5 @@ export const mixins = {
       line-height: 160%;
       font-weight: 400;
     `,
-  },
+  }
 };

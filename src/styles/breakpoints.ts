@@ -10,6 +10,7 @@ interface Size {
 const size: Size = {
   xs: "320px",
   sm: "768px",
+
   md: "1024px",
   lg: "1120px",
   xl: "1280px",
@@ -21,4 +22,4 @@ export const breakpoints = {
   md: `(max-width: ${size.md})`,
   lg: `(max-width: ${size.lg})`,
   xl: `(max-width: ${size.xl})`,
-};
+} as const;
