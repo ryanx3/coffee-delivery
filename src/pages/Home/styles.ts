@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { mixins } from "../../styles/mixins";
+import * as RadioGroup from "@radix-ui/react-radio-group";
 
 export const HomeContainer = styled.main``;
 
@@ -24,9 +25,42 @@ export const ContentSection = styled.section`
   }
 `;
 
+interface TagSearchProps {
+  variant?: "Tradicionais" | "Gelados";
+}
+
+export const TagSearchContainer = styled(RadioGroup.Root)`
+  display: flex;
+  align-items: center;
+`;
+
+export const TagSearchButton = styled(RadioGroup.Item)<TagSearchProps>`
+  ${mixins.fonts.tag}
+
+  max-width: fit-content;
+  border: 2px solid ${({ theme }) => theme.colors.yellow};
+  border-radius: 100px;
+  padding: 0.5rem 0.75rem;
+  text-transform: uppercase;
+
+  &:not([data-state="checked"]):hover {
+    background-color: ${({ theme }) => theme.colors["base-hover"]};
+  }
+
+  &[data-state="checked"] {
+    transition:
+      background-color 0.2s,
+      color 0.2s;
+    background-color: ${({ theme }) => theme.colors.yellow};
+    color: ${({ theme }) => theme.colors.white};
+  }
+`;
+
 export const CardWrapper = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-row-gap: 5.8rem;
-  grid-column-gap: 5.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  row-gap: 2.5rem;
+  column-gap: 1rem;
 `;
