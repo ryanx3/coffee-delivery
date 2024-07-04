@@ -1,11 +1,17 @@
 import styled from "styled-components";
 import { mixins } from "../../styles/mixins";
 import * as RadioGroup from "@radix-ui/react-radio-group";
+import { breakpoints } from "../../styles/breakpoints";
 
 export const CheckoutContainer = styled.main`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
+
+  @media (${breakpoints.lg}) {
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 export const FormContainer = styled.section``;
@@ -54,6 +60,11 @@ export const AddressContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2rem;
+
+  @media (${breakpoints.sm}) {
+    padding: 1rem;
+    gap: 1rem;
+  }
 `;
 
 export const InputWrapper = styled.div`
@@ -79,9 +90,6 @@ export const InputWrapper = styled.div`
   }
 `;
 
-interface PaymentTypeButtonProps {
-  variant: "credit-card" | "debit-card" | "cash";
-}
 
 export const PaymentContainer = styled.div`
   background-color: ${({ theme }) => theme.colors["base-card"]};
@@ -90,17 +98,24 @@ export const PaymentContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2rem;
-`;
+  white-space: nowrap;
+  
+  @media (${breakpoints.sm}) {
+    padding: 1rem;
+    gap: 1rem;
+  }
+  `;
 
 export const PaymentType = styled(RadioGroup.Root)`
   display: flex;
   align-items: center;
   gap: 0.75rem;
-`;
+  `;
 
-export const PaymentTypeButton = styled(
-  RadioGroup.Item
-)<PaymentTypeButtonProps>`
+interface PaymentTypeButtonProps {
+  variant: "credit-card" | "debit-card" | "cash";
+}
+export const PaymentTypeButton = styled(RadioGroup.Item)<PaymentTypeButtonProps>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -124,12 +139,6 @@ export const PaymentTypeButton = styled(
     font-size: 16px;
   }
 
-  &[data-state="unchecked"] {
-    &:hover {
-      background: ${(props) => props.theme["gray-600"]};
-    }
-  }
-
   &[data-state="checked"] {
     transition: background-color 0.2s;
     background-color: ${({ theme }) => theme.colors["purple-light"]};
@@ -142,6 +151,16 @@ export const PaymentTypeButton = styled(
       fill: ${({ theme }) => theme.colors["purple-dark"]};
     }
   }
+
+  @media (${breakpoints.sm}) {
+    padding: 1rem 0.5rem;
+    gap: 4px;
+  }
+  @media (${breakpoints.xs}) {
+    svg {
+      display: none;
+    }
+  }
 `;
 
 export const CartContent = styled.div`
@@ -152,6 +171,11 @@ export const CartContent = styled.div`
   padding: 2.5rem;
   background-color: ${({ theme }) => theme.colors["base-card"]};
   border-radius: 6px 44px;
+
+  @media (${breakpoints.sm}) {
+    padding: 1rem;
+    gap: 0.75rem;
+  }
 `;
 
 export const CoffeeWrapper = styled.div`
