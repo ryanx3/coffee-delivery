@@ -16,9 +16,7 @@ export function Home() {
 
   useEffect(() => {
     async function fetchCoffee() {
-      const response = await api.get(
-        `http://localhost:3333/coffee?tags=${tags}`
-      );
+      const response = await api.get(`/coffee`);
       const dataResponse: CardType[] = response.data;
       setCoffee(dataResponse);
 
