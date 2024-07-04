@@ -16,7 +16,6 @@ export function HeroSection() {
 
   return (
     <HeroContainer>
-
       <img src={HeroBackground} className="hero-bg" alt="" />
 
       <Content>
@@ -26,7 +25,7 @@ export function HeroSection() {
 
             <span>
               Com o Coffee Delivery você recebe seu café onde estiver, a
-              qualquer hora...
+              qualquer hora
             </span>
           </Title>
 
