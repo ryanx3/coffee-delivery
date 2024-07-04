@@ -1,5 +1,6 @@
 import styled, { keyframes } from "styled-components";
 import { mixins } from "../../../../styles/mixins";
+import { breakpoints } from "../../../../styles/breakpoints";
 
 const fadeInUp = keyframes`
   0% {
@@ -40,7 +41,7 @@ export const HeroContainer = styled.section`
     left: 50%;
     transform: translateX(-50%);
     z-index: -1;
-    width: 100%;
+    max-width: 100%;
   }
 `;
 
@@ -54,6 +55,8 @@ export const Content = styled.div`
 export const Title = styled.div`
   text-align: left;
   margin-bottom: 4.125rem;
+  max-width: 100%;
+  word-wrap: break-word;
 
   > h1 {
     ${mixins.fonts.titleXL}
@@ -64,8 +67,8 @@ export const Title = styled.div`
   > span {
     ${mixins.fonts.textL}
     color: ${({ theme }) => theme.colors["base-subtitle"]};
-    white-space: nowrap;
     overflow: hidden;
+    white-space: nowrap;
     border-right: 0.15em solid black;
     animation:
       ${typing} 3s steps(60) normal,
@@ -73,6 +76,36 @@ export const Title = styled.div`
     display: inline-block;
     max-width: fit-content;
   }
+
+  @media (${breakpoints.xl}) {
+    margin-bottom: 2.5rem;
+    > h1 {
+      ${mixins.fonts.titleL}
+    }
+
+    > span {
+      display: inline;
+      ${mixins.fonts.textM}
+    }
+  }
+
+  @media (${breakpoints.md}) {
+    margin-bottom: 1rem;
+    > span {
+      ${mixins.fonts.textS}
+      white-space: normal;
+    }
+  }
+
+  @media (max-width: 900px) {
+    margin-bottom: 1rem;
+    > h1 {
+      ${mixins.fonts.titleS}
+    }
+    >span {
+      ${mixins.fonts.textXS}
+      font-weight: 400;
+  }}
 `;
 
 export const Items = styled.div`
@@ -93,6 +126,26 @@ export const Items = styled.div`
     span {
       ${mixins.fonts.textM}
       color: ${({ theme }) => theme.colors["base-text"]};
+      white-space: normal;
+    }
+  }
+
+  @media (${breakpoints.xl}) {
+    div {
+      gap: 0.5rem;
+
+      span {
+        ${mixins.fonts.textS}
+      }
+    }
+  }
+
+  @media (${breakpoints.md}) {
+    div {
+      span {
+        ${mixins.fonts.textXS}
+        font-weight: 400;
+      }
     }
   }
 `;
@@ -100,4 +153,9 @@ export const Items = styled.div`
 export const AnimatedImage = styled.img`
   animation: ${fadeInUp} 1s ease-out forwards;
   opacity: 0;
+
+  @media (${breakpoints.xl}) {
+    width: 350px;
+  }
+
 `;
