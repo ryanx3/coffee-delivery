@@ -14,8 +14,10 @@ import {
   Tags,
   Title,
 } from "./styles";
+import { useCart } from "../../hooks/UseCart";
+import { useState } from "react";
 
-interface CardType {
+export interface CardType {
   id: number;
   image: string;
   tags: string[];
@@ -24,34 +26,56 @@ interface CardType {
   description: string;
 }
 
-interface CardProps {
-  data: CardType;
+export interface CardProps {
+  coffee: CardType;
 }
 
-export function Card({ data }: CardProps) {
+export function Card({ coffee }: CardProps) {
+  const { AddCoffeeToCart } = useCart();
+  const [quantity, setQuantity] = useState(1);
+
+  function handleAddCoffeeToCart() {
+    const coffeeToAdd = {
+      ...coffee,
+      quantity,
+    };
+    AddCoffeeToCart(coffeeToAdd);
+  }
+
+  function handleIncreaseQuantity() {
+    setQuantity((prev) => prev + 1);
+  }
+  function handleDecreaseQuantity() {
+    setQuantity((prev) => prev - 1);
+  }
+
   return (
     <CardContainer>
-      <Image src={data.image} />
+      <Image src={coffee.image} />
 
       <Tags>
-        {data.tags.map((tag, index) => (
+        {coffee.tags.map((tag, index) => (
           <Tag key={index}>{tag}</Tag>
         ))}
       </Tags>
 
-      <Title>{data.title}</Title>
+      <Title>{coffee.title}</Title>
 
-      <Description>{data.description}</Description>
+      <Description>{coffee.description}</Description>
 
       <OrderContainer>
         <Price>
           <span>R$</span>
-          <span>{priceFormatter(data.price)}</span>
+          <span>{priceFormatter(coffee.price)}</span>
         </Price>
 
         <div className="buy-content">
-          <Counter quantity={2} />
-          <ButtonCart>
+          <Counter
+            quantity={quantity}
+            decrementQuantity={handleDecreaseQuantity}
+            incrementQuantity={handleIncreaseQuantity}
+          />
+          <ButtonCart onClick={handleAddCoffeeToCart}>
             <PiShoppingCartFill size={22} />
           </ButtonCart>
         </div>

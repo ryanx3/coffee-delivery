@@ -9,16 +9,16 @@ type CounterProps = {
 };
 
 export function Counter({
-  quantity = 1,
+  quantity,
   incrementQuantity,
   decrementQuantity,
 }: CounterProps) {
   return (
     <CounterContainer>
-      <button>
+      <button disabled={quantity <= 1}>
         <PiMinusBold size={14} onClick={decrementQuantity} />
       </button>
-      <span>{quantity}</span>
+      <span>{Number(quantity)}</span>
       <button>
         <PiPlusBold size={14} onClick={incrementQuantity} />
       </button>
