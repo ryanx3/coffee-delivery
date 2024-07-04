@@ -1,8 +1,8 @@
 import { PiShoppingCartFill } from "react-icons/pi";
-import coffee from "../../assets/coffee.png";
 
 import { Tag } from "../Tag";
 import { Counter } from "../Counter";
+import { priceFormatter } from "../../utils/formatter";
 
 import {
   ButtonCart,
@@ -14,26 +14,39 @@ import {
   Tags,
   Title,
 } from "./styles";
-import { priceFormatter } from "../../utils/formatter";
 
-export function Card() {
+interface CardType {
+  id: number;
+  image: string;
+  tags: string[];
+  title: string;
+  price: number;
+  description: string;
+}
+
+interface CardProps {
+  data: CardType;
+}
+
+export function Card({ data }: CardProps) {
   return (
     <CardContainer>
-      <Image src={coffee} />
+      <Image src={data.image} />
 
       <Tags>
-        <Tag>Tradicional</Tag>
-        <Tag>Tradicional</Tag>
+        {data.tags.map((tag, index) => (
+          <Tag key={index}>{tag}</Tag>
+        ))}
       </Tags>
 
-      <Title>Café tradicional</Title>
+      <Title>{data.title}</Title>
 
-      <Description>Café expresso tradicional com espuma cremosa</Description>
+      <Description>{data.description}</Description>
 
       <OrderContainer>
         <Price>
           <span>R$</span>
-          <span>{priceFormatter.format(12.99)}</span>
+          <span>{priceFormatter(data.price)}</span>
         </Price>
 
         <div className="buy-content">
