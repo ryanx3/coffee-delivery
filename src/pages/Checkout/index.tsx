@@ -114,24 +114,24 @@ export function Checkout() {
             </div>
 
             <span className="coffee-price">
-              R$ {priceFormatter.format(9.98)}
+              R$ {priceFormatter(9.98)}
             </span>
           </CoffeeWrapper>
 
           <CartTotalPrice>
             <div>
               <span>Total de itens</span>
-              <span>R${priceFormatter.format(9.98)}</span>
+              <span>R${priceFormatter(9.98)}</span>
             </div>
 
             <div>
               <span>Entrega</span>
-              <span>R${priceFormatter.format(3.99)}</span>
+              <span>R${priceFormatter(3.99)}</span>
             </div>
 
             <div>
               <span>Total</span>
-              <span>R${priceFormatter.format(25.90)}</span>
+              <span>R${priceFormatter(25.90)}</span>
             </div>
           </CartTotalPrice>
 
