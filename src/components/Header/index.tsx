@@ -3,12 +3,14 @@ import { LogoHeader } from "../../assets/logo";
 import { Link } from "react-router-dom";
 
 import { HeaderContainer, HeaderNav } from "./styles";
+import { useCart } from "../../hooks/UseCart";
 
 export function Header() {
+  const { cartTotalQuantity } = useCart();
   return (
     <HeaderContainer>
       <Link to={"/"}>
-        <LogoHeader/>
+        <LogoHeader />
       </Link>
 
       <HeaderNav>
@@ -18,7 +20,7 @@ export function Header() {
         </div>
         <Link to={"/checkout"}>
           <PiShoppingCartFill size={22} />
-          <span>2</span>
+          <span>{cartTotalQuantity}</span>
         </Link>
       </HeaderNav>
     </HeaderContainer>
