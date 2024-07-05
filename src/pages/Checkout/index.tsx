@@ -1,4 +1,3 @@
-import coffee from "../../assets/coffee.png";
 import {
   PiCurrencyDollar,
   PiMoney,
@@ -29,8 +28,13 @@ import {
 } from "./styles";
 import { Counter } from "../../components/Counter";
 import { priceFormatter } from "../../utils/formatter";
+import { useCart } from "../../hooks/UseCart";
 
 export function Checkout() {
+  const { cartItems, cartItemTotalPrice } = useCart();
+
+  const valueOfDelivery = cartItemTotalPrice / 10;
+  const totalValueWithDelivery = cartItemTotalPrice + valueOfDelivery;
   return (
     <CheckoutContainer>
       <FormContainer>
@@ -96,42 +100,44 @@ export function Checkout() {
         <Title>Cafés selecionados</Title>
 
         <CartContent>
-          <CoffeeWrapper>
-            <div>
-              <img src={coffee} alt="" />
+          {cartItems.map((cart) => (
+            <CoffeeWrapper>
+              <div>
+                <img src={cart.image} alt="" />
 
-              <CoffeeInfo>
-                <span>Café tradicional</span>
-                <div>
-                  <Counter quantity={1} />
+                <CoffeeInfo>
+                  <span>{cart.title}</span>
+                  <div>
+                    <Counter quantity={cart.quantity} />
 
-                  <ButtonRemove>
-                    <PiTrash />
-                    <span>Remover</span>
-                  </ButtonRemove>
-                </div>
-              </CoffeeInfo>
-            </div>
+                    <ButtonRemove>
+                      <PiTrash />
+                      <span>Remover</span>
+                    </ButtonRemove>
+                  </div>
+                </CoffeeInfo>
+              </div>
 
-            <span className="coffee-price">
-              R$ {priceFormatter(9.98)}
-            </span>
-          </CoffeeWrapper>
+              <span className="coffee-price">
+                R$ {priceFormatter(cart.price * cart.quantity)}
+              </span>
+            </CoffeeWrapper>
+          ))}
 
           <CartTotalPrice>
             <div>
               <span>Total de itens</span>
-              <span>R${priceFormatter(9.98)}</span>
+              <span>R${priceFormatter(cartItemTotalPrice)}</span>
             </div>
 
             <div>
               <span>Entrega</span>
-              <span>R${priceFormatter(3.99)}</span>
+              <span>R${priceFormatter(valueOfDelivery)}</span>
             </div>
 
             <div>
               <span>Total</span>
-              <span>R${priceFormatter(25.90)}</span>
+              <span>R${priceFormatter(totalValueWithDelivery)}</span>
             </div>
           </CartTotalPrice>
 
