@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
 import { CardType } from "../components/Card";
 import { produce } from "immer";
 
@@ -8,6 +8,8 @@ interface CartItem extends CardType {
 
 export interface CartContextProps {
   cartItems: CartItem[];
+  cartTotalQuantity: number;
+  cartItemTotalPrice: number;
   AddCoffeeToCart: (coffee: CartItem) => void;
 }
 
@@ -17,8 +19,29 @@ interface CartProviderProps {
   children: ReactNode;
 }
 
+const COFFEE_ITEMS_STORAGE_KEY = "coffeeDelivery:cartItems";
+
 export function CartProvider({ children }: CartProviderProps) {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>(() => {
+    try {
+      const storedCartItem = localStorage.getItem(COFFEE_ITEMS_STORAGE_KEY);
+      if (storedCartItem) {
+        return JSON.parse(storedCartItem);
+      }
+      return [];
+    } catch (error) {
+      alert(
+        "Ocorreu um erro ao carregar o carrinho de compras. Tente novamente mais tarde."
+      );
+      return [];
+    }
+  });
+
+  const cartTotalQuantity = cartItems.length;
+
+  const cartItemTotalPrice = cartItems.reduce((total, cart) => {
+    return total + cart.price * cart.quantity;
+  }, 0);
 
   function AddCoffeeToCart(coffee: CartItem) {
     const isCoffeeExistsInStorage = cartItems.findIndex(
@@ -35,8 +58,23 @@ export function CartProvider({ children }: CartProviderProps) {
     setCartItems(newCart);
   }
 
+  useEffect(() => {
+    try {
+      localStorage.setItem(COFFEE_ITEMS_STORAGE_KEY, JSON.stringify(cartItems));
+    } catch (error) {
+      console.error("Erro ao salvar no localStorage:", error);
+    }
+  }, [cartItems]);
+
   return (
-    <CartContext.Provider value={{ cartItems, AddCoffeeToCart }}>
+    <CartContext.Provider
+      value={{
+        cartItems,
+        AddCoffeeToCart,
+        cartTotalQuantity,
+        cartItemTotalPrice,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );
