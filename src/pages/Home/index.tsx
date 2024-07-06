@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Card, CardType } from "../../components/Card";
+import { Card, CardCoffee } from "../../components/Card";
 import { HeroSection } from "./components/HeroSection";
 import {
   CardWrapper,
@@ -11,18 +11,18 @@ import {
 import { api } from "../../services/api";
 
 export function Home() {
-  const [coffee, setCoffee] = useState<CardType[]>([]);
+  const [coffee, setCoffee] = useState<CardCoffee[]>([]);
   const [tags, setTags] = useState<string[]>([]);
 
   useEffect(() => {
     async function fetchCoffee() {
       const response = await api.get(`/coffee`);
-      const dataResponse: CardType[] = response.data;
+      const dataResponse: CardCoffee[] = response.data;
       setCoffee(dataResponse);
 
       const uniqueTags = [
         ...new Set(
-          dataResponse.flatMap((coffeeItem: CardType) => coffeeItem.tags)
+          dataResponse.flatMap((coffeeItem: CardCoffee) => coffeeItem.tags)
         ),
       ];
       setTags(uniqueTags);

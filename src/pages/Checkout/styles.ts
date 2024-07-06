@@ -90,7 +90,6 @@ export const InputWrapper = styled.div`
   }
 `;
 
-
 export const PaymentContainer = styled.div`
   background-color: ${({ theme }) => theme.colors["base-card"]};
   padding: 2.5rem;
@@ -99,23 +98,25 @@ export const PaymentContainer = styled.div`
   flex-direction: column;
   gap: 2rem;
   white-space: nowrap;
-  
+
   @media (${breakpoints.sm}) {
     padding: 1rem;
     gap: 1rem;
   }
-  `;
+`;
 
 export const PaymentType = styled(RadioGroup.Root)`
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  `;
+`;
 
 interface PaymentTypeButtonProps {
   variant: "credit-card" | "debit-card" | "cash";
 }
-export const PaymentTypeButton = styled(RadioGroup.Item)<PaymentTypeButtonProps>`
+export const PaymentTypeButton = styled(
+  RadioGroup.Item
+)<PaymentTypeButtonProps>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -164,13 +165,18 @@ export const PaymentTypeButton = styled(RadioGroup.Item)<PaymentTypeButtonProps>
 `;
 
 export const CartContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-
   padding: 2.5rem;
   background-color: ${({ theme }) => theme.colors["base-card"]};
   border-radius: 6px 44px;
+
+  .scroll-coffee {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    height: 336px !important;
+    overflow-y: scroll;
+    
+  }
 
   @media (${breakpoints.sm}) {
     padding: 1rem;
