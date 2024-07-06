@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { toast } from "react-toastify";
 import { PiShoppingCartFill } from "react-icons/pi";
 
 import { Tag } from "../Tag";
@@ -15,9 +17,8 @@ import {
   Title,
 } from "./styles";
 import { useCart } from "../../hooks/UseCart";
-import { useState } from "react";
 
-export interface CardType {
+export interface CardCoffee {
   id: number;
   image: string;
   tags: string[];
@@ -27,7 +28,7 @@ export interface CardType {
 }
 
 export interface CardProps {
-  coffee: CardType;
+  coffee: CardCoffee;
 }
 
 export function Card({ coffee }: CardProps) {
@@ -35,11 +36,17 @@ export function Card({ coffee }: CardProps) {
   const [quantity, setQuantity] = useState(1);
 
   function handleAddCoffeeToCart() {
-    const coffeeToAdd = {
-      ...coffee,
-      quantity,
-    };
-    AddCoffeeToCart(coffeeToAdd);
+    try {
+      const coffeeToAdd = {
+        ...coffee,
+        quantity,
+      };
+      AddCoffeeToCart(coffeeToAdd);
+      toast("Café adicionado ao carrinho.");
+    } catch (error) {
+      toast.error("Não foi possível adicionar esse café ao seu carrinho");
+      console.error(error);
+    }
   }
 
   function handleIncreaseQuantity() {
