@@ -1,8 +1,8 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
-import { CardType } from "../components/Card";
+import { CardCoffee } from "../components/Card";
 import { produce } from "immer";
 
-interface CartItem extends CardType {
+export interface CartItem extends CardCoffee {
   quantity: number;
 }
 
@@ -10,7 +10,12 @@ export interface CartContextProps {
   cartItems: CartItem[];
   cartTotalQuantity: number;
   cartItemTotalPrice: number;
+  removeCoffeeToCart: (coffeeRemoved: number) => void;
   AddCoffeeToCart: (coffee: CartItem) => void;
+  updateQuantityCoffeeToCart: (
+    type: "decrease" | "increase",
+    coffeeId: number
+  ) => void;
 }
 
 export const CartContext = createContext({} as CartContextProps);
@@ -38,17 +43,15 @@ export function CartProvider({ children }: CartProviderProps) {
   });
 
   const cartTotalQuantity = cartItems.length;
-
   const cartItemTotalPrice = cartItems.reduce((total, cart) => {
     return total + cart.price * cart.quantity;
   }, 0);
 
   function AddCoffeeToCart(coffee: CartItem) {
-    const isCoffeeExistsInStorage = cartItems.findIndex(
-      (item) => item.id === coffee.id
-    );
-
     const newCart = produce(cartItems, (draft) => {
+      const isCoffeeExistsInStorage = cartItems.findIndex(
+        (item) => item.id === coffee.id
+      );
       if (isCoffeeExistsInStorage < 0) {
         draft.push(coffee);
       } else {
@@ -56,6 +59,38 @@ export function CartProvider({ children }: CartProviderProps) {
       }
     });
     setCartItems(newCart);
+  }
+
+  function updateQuantityCoffeeToCart(
+    type: "decrease" | "increase",
+    coffeeId: number
+  ) {
+    const newCart = produce(cartItems, (draft) => {
+      const filteredCoffee = cartItems.findIndex(
+        (item) => item.id === coffeeId
+      );
+      if (filteredCoffee <= 0) {
+        const coffee = draft[filteredCoffee];
+        if (type === "increase") {
+          draft[filteredCoffee].quantity = coffee.quantity + 1;
+        } else {
+          draft[filteredCoffee].quantity = coffee.quantity - 1;
+        }
+      }
+    });
+    setCartItems(newCart);
+  }
+
+  function removeCoffeeToCart(coffeeRemoved: number) {
+    const newCartWithoutCoffeeRemoved = produce(cartItems, (draft) => {
+      const filteredCoffee = cartItems.findIndex(
+        (coffee) => coffee.id === coffeeRemoved
+      );
+      if (filteredCoffee !== -1) {
+        draft.splice(filteredCoffee, 1);
+      }
+    });
+    setCartItems(newCartWithoutCoffeeRemoved);
   }
 
   useEffect(() => {
@@ -73,6 +108,8 @@ export function CartProvider({ children }: CartProviderProps) {
         AddCoffeeToCart,
         cartTotalQuantity,
         cartItemTotalPrice,
+        removeCoffeeToCart,
+        updateQuantityCoffeeToCart,
       }}
     >
       {children}
