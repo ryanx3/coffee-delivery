@@ -9,17 +9,16 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   :root {
-
     ::-webkit-scrollbar {
-      width: 6px;
+      width: 15px;
       background-color: transparent;
     }
 
     ::-webkit-scrollbar-thumb {
-      background: ${({theme}) => theme.colors.purple};
-      border-radius: 5px;
+       background: linear-gradient(to right, transparent 50%, ${({ theme }) => theme.colors.purple} 50%);
       bottom: 0;
     }
+
   }
 
   body {
