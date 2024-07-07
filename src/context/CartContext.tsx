@@ -99,6 +99,7 @@ export function CartProvider({ children }: CartProviderProps) {
     } catch (error) {
       console.error("Erro ao salvar no localStorage:", error);
     }
+    
   }, [cartItems]);
 
   return (
