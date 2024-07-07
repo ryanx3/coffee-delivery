@@ -1,3 +1,10 @@
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { Counter } from "../../components/Counter";
+import { priceFormatter } from "../../utils/formatter";
+import { useCart } from "../../hooks/UseCart";
+import { TextInput } from "../../components/TextInput";
 import {
   PiCurrencyDollar,
   PiMoney,
@@ -6,7 +13,7 @@ import {
   PiCreditCard,
   PiBank,
 } from "react-icons/pi";
-import { TextInput } from "../../components/TextInput";
+
 import {
   AddressContainer,
   ButtonRemove,
@@ -25,11 +32,24 @@ import {
   PaymentTypeButton,
   CartTotalPrice,
 } from "./styles";
-import { Counter } from "../../components/Counter";
-import { priceFormatter } from "../../utils/formatter";
-import { useCart } from "../../hooks/UseCart";
+import axios from "axios";
+import { toast } from "react-toastify";
 
+const AddressFormSchema = z.object({
+  cep: z.string(),
+  street: z.string(),
+  number: z.number(),
+  complement: z.string(),
+  city: z.string(),
+  neighborhood: z.string(),
+  uf: z.string(),
+});
+
+type AddressFormInput = z.infer<typeof AddressFormSchema>;
 export function Checkout() {
+  const { register, handleSubmit, formState, reset, setFocus, setValue } =
+    useForm<AddressFormInput>({ resolver: zodResolver(AddressFormSchema) });
+
   const {
     cartItems,
     cartItemTotalPrice,
@@ -48,11 +68,55 @@ export function Checkout() {
     updateQuantityCoffeeToCart("decrease", coffeeId);
   }
 
+  function handleSendingOrder() {}
+
+  async function handleFetchCep(e: React.ChangeEvent<HTMLInputElement>) {
+    const cep = e.target.value;
+
+    if (e.type === "blur") {
+      try {
+        const response = await axios.get(
+          `https://brasilapi.com.br/api/cep/v1/${cep}`
+        );
+
+        await toast.promise(
+          new Promise((response) => setTimeout(response, 2000)),
+          {
+            pending: "Buscando CEP...",
+            success: "CEP encontrado.",
+            error: "Erro ao buscar este CEP...",
+          }
+        );
+
+        setValue("street", response.data.street);
+        setValue("city", response.data.city);
+        setValue("neighborhood", response.data.neighborhood);
+        setValue("uf", response.data.state);
+        setValue("cep", cep);
+
+        setFocus("number");
+      } catch (error) {
+        console.error("Erro ao buscar dados:", error);
+        toast.error("Erro ao buscar dados 🤯");
+
+        setFocus("cep");
+        reset({
+          cep: "",
+          street: "",
+          complement: "",
+          city: "",
+          neighborhood: "",
+          uf: "",
+        });
+      }
+    }
+  }
+
   return (
     <CheckoutContainer>
       <FormContainer>
         <Title>Complete seu pedido</Title>
-        <form id="order">
+        <form id="order" onSubmit={handleSubmit(handleSendingOrder)}>
           <AddressContainer>
             <Heading variant="address">
               <PiMapPinLineLight />
@@ -62,16 +126,36 @@ export function Checkout() {
               </div>
             </Heading>
             <InputWrapper>
-              <TextInput placeholder="CEP" className="cep" />
-              <TextInput placeholder="Rua" />
+              <TextInput
+                placeholder="CEP"
+                className="cep"
+                {...register("cep")}
+                onBlur={handleFetchCep}
+              />
+              <TextInput placeholder="Rua" {...register("street")} />
               <div>
-                <TextInput placeholder="Número" className="number" />
-                <TextInput placeholder="Complemento" />
+                <TextInput
+                  placeholder="Número"
+                  className="number"
+                  {...register("number")}
+                />
+                <TextInput
+                  placeholder="Complemento"
+                  {...register("complement")}
+                />
               </div>
               <div>
-                <TextInput placeholder="Bairro" className="neighborhood" />
-                <TextInput placeholder="Cidade" />
-                <TextInput placeholder="UF" className="uf" />
+                <TextInput
+                  placeholder="Bairro"
+                  className="neighborhood"
+                  {...register("neighborhood")}
+                />
+                <TextInput placeholder="Cidade" {...register("city")} />
+                <TextInput
+                  placeholder="UF"
+                  className="uf"
+                  {...register("uf")}
+                />
               </div>
             </InputWrapper>
           </AddressContainer>
