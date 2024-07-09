@@ -1,13 +1,18 @@
 import { InputHTMLAttributes, forwardRef } from "react";
-import { TextInputContainer } from "./styles";
+import { TextInputContainer, InputWrapper } from "./styles";
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {}
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  optionText?: string;
+}
 
 export const TextInput = forwardRef<HTMLInputElement, InputProps>(
-  ({ placeholder, ...rest }, ref) => {
+  ({ placeholder, optionText, ...rest }, ref) => {
     return (
       <TextInputContainer>
-        <input type="text" ref={ref} placeholder={placeholder} {...rest} />
+        <InputWrapper>
+          <input type="text" ref={ref} placeholder={placeholder} {...rest} />
+          {optionText && <span>{optionText}</span>}
+        </InputWrapper>
       </TextInputContainer>
     );
   }
