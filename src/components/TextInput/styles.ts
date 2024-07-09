@@ -12,15 +12,30 @@ export const TextInputContainer = styled.div`
   &:focus-within {
     border: 2px solid ${({ theme }) => theme.colors["yellow-dark"]};
   }
+`;
+
+export const InputWrapper = styled.div`
+  display: flex;
+  align-items: center;
+
 
   > input {
-    width: 100%;
+    flex: 1;
     border: none;
     outline: none;
     background: transparent;
+    margin-right: 8px;
 
     &::placeholder {
       color: ${({ theme }) => theme.colors["base-label"]};
     }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  span {
+    
   }
 `;
