@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { mixins } from "../../styles/mixins";
 import * as RadioGroup from "@radix-ui/react-radio-group";
 import { breakpoints } from "../../styles/breakpoints";
+import { Link } from "react-router-dom";
 
 export const CheckoutContainer = styled.main`
   display: grid;
@@ -165,6 +166,7 @@ export const PaymentTypeButton = styled(
 `;
 
 export const CartContent = styled.div`
+position: relative;
   padding: 2.5rem;
   background-color: ${({ theme }) => theme.colors["base-card"]};
   border-radius: 6px 44px;
@@ -175,7 +177,6 @@ export const CartContent = styled.div`
     gap: 1.5rem;
     height: 336px !important;
     overflow-y: scroll;
-    
   }
 
   @media (${breakpoints.sm}) {
@@ -294,5 +295,30 @@ export const CheckoutButton = styled.button`
 
   &:hover {
     background-color: ${({ theme }) => theme.colors["yellow-dark"]};
+  }
+
+  &:disabled {
+    filter: brightness(0.9);
+    cursor: not-allowed;
+  }
+`;
+
+export const EmptyCard = styled(Link)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  text-decoration: none;
+  &:visited {
+    color: inherit;
+  }
+
+  p {
+    ${mixins.fonts.titleXS}
+  }
+
+  svg {
+    fill: ${({ theme }) => theme.colors.purple};
   }
 `;
