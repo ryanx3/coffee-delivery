@@ -1,5 +1,6 @@
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { FaCartPlus } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { Counter } from "../../components/Counter";
 import { priceFormatter } from "../../utils/formatter";
@@ -31,9 +32,11 @@ import {
   PaymentType,
   PaymentTypeButton,
   CartTotalPrice,
+  EmptyCard,
 } from "./styles";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useState } from "react";
 
 const AddressFormSchema = z.object({
   cep: z.string(),
@@ -60,6 +63,8 @@ export function Checkout() {
   const valueOfDelivery = cartItemTotalPrice / 10;
   const totalValueWithDelivery = cartItemTotalPrice + valueOfDelivery;
 
+  const [inputsDisabled, setInputsDisabled] = useState(true);
+
   function handleIncreaseQuantity(coffeeId: number) {
     updateQuantityCoffeeToCart("increase", coffeeId);
   }
@@ -68,19 +73,20 @@ export function Checkout() {
     updateQuantityCoffeeToCart("decrease", coffeeId);
   }
 
-  function handleSendingOrder() {}
+  async function handleSendingOrder() {
+  }
 
-  async function handleFetchCep(e: React.ChangeEvent<HTMLInputElement>) {
-    const cep = e.target.value;
+  async function handleFetchCep(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter") {
+      const cep = e.currentTarget.value;
 
-    if (e.type === "blur") {
       try {
         const response = await axios.get(
           `https://brasilapi.com.br/api/cep/v1/${cep}`
         );
 
         await toast.promise(
-          new Promise((response) => setTimeout(response, 2000)),
+          new Promise((resolve) => setTimeout(resolve, 2000)),
           {
             pending: "Buscando CEP...",
             success: "CEP encontrado.",
@@ -95,10 +101,9 @@ export function Checkout() {
         setValue("cep", cep);
 
         setFocus("number");
+        setInputsDisabled(false);
       } catch (error) {
-        console.error("Erro ao buscar dados:", error);
-        toast.error("Erro ao buscar dados 🤯");
-
+        console.error("Erro ao buscar CEP:", error);
         setFocus("cep");
         reset({
           cep: "",
@@ -108,6 +113,7 @@ export function Checkout() {
           neighborhood: "",
           uf: "",
         });
+        toast.error("Erro ao buscar CEP 🤯");
       }
     }
   }
@@ -130,9 +136,15 @@ export function Checkout() {
                 placeholder="CEP"
                 className="cep"
                 {...register("cep")}
-                onBlur={handleFetchCep}
+                onKeyDown={handleFetchCep}
+                optionText="Pressione Enter para buscar"
               />
-              <TextInput placeholder="Rua" {...register("street")} />
+              <TextInput
+                placeholder="Rua"
+                {...register("street")}
+                disabled={inputsDisabled}
+                required
+              />
               <div>
                 <TextInput
                   placeholder="Número"
@@ -142,6 +154,8 @@ export function Checkout() {
                 <TextInput
                   placeholder="Complemento"
                   {...register("complement")}
+                  disabled={inputsDisabled}
+                  optionText="Opcional"
                 />
               </div>
               <div>
@@ -149,12 +163,18 @@ export function Checkout() {
                   placeholder="Bairro"
                   className="neighborhood"
                   {...register("neighborhood")}
+                  disabled={inputsDisabled}
                 />
-                <TextInput placeholder="Cidade" {...register("city")} />
+                <TextInput
+                  placeholder="Cidade"
+                  {...register("city")}
+                  disabled={inputsDisabled}
+                />
                 <TextInput
                   placeholder="UF"
                   className="uf"
                   {...register("uf")}
+                  disabled={inputsDisabled}
                 />
               </div>
             </InputWrapper>
@@ -191,50 +211,64 @@ export function Checkout() {
         <Title>Cafés selecionados</Title>
         <CartContent>
           <div className="scroll-coffee">
-            {cartItems.map((cart) => (
-              <CoffeeWrapper key={cart.id}>
-                <div>
-                  <img src={cart.image} alt="" />
-                  <CoffeeInfo>
-                    <span>{cart.title}</span>
-                    <div>
-                      <Counter
-                        quantity={cart.quantity}
-                        decrementQuantity={() =>
-                          handleDecreaseQuantity(cart.id)
-                        }
-                        incrementQuantity={() =>
-                          handleIncreaseQuantity(cart.id)
-                        }
-                      />
-                      <ButtonRemove onClick={() => removeCoffeeToCart(cart.id)}>
-                        <PiTrash />
-                        <span>Remover</span>
-                      </ButtonRemove>
-                    </div>
-                  </CoffeeInfo>
-                </div>
-                <span className="coffee-price">
-                  R$ {priceFormatter(cart.price * cart.quantity)}
-                </span>
-              </CoffeeWrapper>
-            ))}
+            {cartItems &&
+              cartItems.map((cart) => (
+                <CoffeeWrapper key={cart.id}>
+                  <div>
+                    <img src={cart.image} alt="" />
+                    <CoffeeInfo>
+                      <span>{cart.title}</span>
+                      <div>
+                        <Counter
+                          quantity={cart.quantity}
+                          decrementQuantity={() =>
+                            handleDecreaseQuantity(cart.id)
+                          }
+                          incrementQuantity={() =>
+                            handleIncreaseQuantity(cart.id)
+                          }
+                        />
+                        <ButtonRemove
+                          onClick={() => removeCoffeeToCart(cart.id)}
+                        >
+                          <PiTrash />
+                          <span>Remover</span>
+                        </ButtonRemove>
+                      </div>
+                    </CoffeeInfo>
+                  </div>
+                  <span className="coffee-price">
+                    R$ {priceFormatter(cart.price * cart.quantity)}
+                  </span>
+                </CoffeeWrapper>
+              ))}
           </div>
-          <CartTotalPrice>
-            <div>
-              <span>Total de itens</span>
-              <span>R${priceFormatter(cartItemTotalPrice)}</span>
-            </div>
-            <div>
-              <span>Entrega</span>
-              <span>R${priceFormatter(valueOfDelivery)}</span>
-            </div>
-            <div>
-              <span>Total</span>
-              <span>R${priceFormatter(totalValueWithDelivery)}</span>
-            </div>
-          </CartTotalPrice>
-          <CheckoutButton type="submit" form="order">
+          {cartItems.length === 0 ? (
+            <EmptyCard to="/">
+              <FaCartPlus size={84} />
+              <p>Carrinho vazio, clique para voltar a página inicial</p>
+            </EmptyCard>
+          ) : (
+            <CartTotalPrice>
+              <div>
+                <span>Total de itens</span>
+                <span>R${priceFormatter(cartItemTotalPrice)}</span>
+              </div>
+              <div>
+                <span>Entrega</span>
+                <span>R${priceFormatter(valueOfDelivery)}</span>
+              </div>
+              <div>
+                <span>Total</span>
+                <span>R${priceFormatter(totalValueWithDelivery)}</span>
+              </div>
+            </CartTotalPrice>
+          )}
+          <CheckoutButton
+            disabled={cartItems.length < 1}
+            type="submit"
+            form="order"
+          >
             Confirmar pedido
           </CheckoutButton>
         </CartContent>
