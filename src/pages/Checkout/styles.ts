@@ -87,7 +87,12 @@ export const InputWrapper = styled.div`
   }
 
   .uf {
-    width: 100px;
+    width: 6.25rem;
+  }
+
+  > span {
+    color: red;
+    ${mixins.fonts.textS}
   }
 `;
 
@@ -113,7 +118,7 @@ export const PaymentType = styled(RadioGroup.Root)`
 `;
 
 interface PaymentTypeButtonProps {
-  variant: "credit-card" | "debit-card" | "cash";
+  variant: "credit-card" | "debit-card" | "pix";
 }
 export const PaymentTypeButton = styled(
   RadioGroup.Item
@@ -166,7 +171,7 @@ export const PaymentTypeButton = styled(
 `;
 
 export const CartContent = styled.div`
-position: relative;
+  position: relative;
   padding: 2.5rem;
   background-color: ${({ theme }) => theme.colors["base-card"]};
   border-radius: 6px 44px;
@@ -175,7 +180,7 @@ position: relative;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    height: 336px !important;
+    max-height: 336px !important;
     overflow-y: scroll;
   }
 
@@ -191,6 +196,7 @@ export const CoffeeWrapper = styled.div`
   justify-content: space-between;
   border-bottom: 1px solid ${({ theme }) => theme.colors["base-button"]};
   padding-bottom: 1.5rem;
+
 
   div:nth-child(1) {
     display: flex;
@@ -259,7 +265,8 @@ export const ButtonRemove = styled.button`
 export const CartTotalPrice = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 0.75rem;
+  padding: 1.5rem 0;
 
   div {
     display: flex;
