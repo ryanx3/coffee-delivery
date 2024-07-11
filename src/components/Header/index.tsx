@@ -6,7 +6,7 @@ import { HeaderContainer, HeaderNav } from "./styles";
 import { useCart } from "../../hooks/UseCart";
 
 export function Header() {
-  const { cartTotalQuantity } = useCart();
+  const { cartTotalQuantity, orderData } = useCart();
   return (
     <HeaderContainer>
       <Link to={"/"}>
@@ -16,7 +16,9 @@ export function Header() {
       <HeaderNav>
         <div>
           <PiMapPinFill size={22} />
-          <span>Curitiba, PR</span>
+          <span>
+            {orderData ? `${orderData.city}, ${orderData.uf}` : "Curitiba, PR"}
+          </span>
         </div>
         <Link to={"/checkout"}>
           <PiShoppingCartFill size={22} />
