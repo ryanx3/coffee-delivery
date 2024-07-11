@@ -8,16 +8,24 @@ export const TextInputContainer = styled.div`
   border-radius: 6px;
   color: ${({ theme }) => theme.colors["base-text"]};
   padding: 0.75rem;
-
   &:focus-within {
     border: 2px solid ${({ theme }) => theme.colors["yellow-dark"]};
+  }
+  position: relative;
+  button {
+    background: transparent;
+    width: fit-content;
+    height: 100%;
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
   }
 `;
 
 export const InputWrapper = styled.div`
   display: flex;
   align-items: center;
-
 
   > input {
     flex: 1;
@@ -33,9 +41,5 @@ export const InputWrapper = styled.div`
     &:disabled {
       cursor: not-allowed;
     }
-  }
-
-  span {
-    
   }
 `;
