@@ -10,12 +10,26 @@ export interface CartContextProps {
   cartItems: CartItem[];
   cartTotalQuantity: number;
   cartItemTotalPrice: number;
+  clearCart: () => void;
   removeCoffeeToCart: (coffeeRemoved: number) => void;
   AddCoffeeToCart: (coffee: CartItem) => void;
+  setOrderData: (data: AddressData) => void;
+  orderData: AddressData | null;
   updateQuantityCoffeeToCart: (
     type: "decrease" | "increase",
     coffeeId: number
   ) => void;
+}
+
+export interface AddressData {
+  cep: string;
+  street: string;
+  number: string;
+  complement?: string;
+  city: string;
+  neighborhood: string;
+  uf: string;
+  paymentType: "pix" | "credit-card" | "debit-card";
 }
 
 export const CartContext = createContext({} as CartContextProps);
@@ -41,6 +55,7 @@ export function CartProvider({ children }: CartProviderProps) {
       return [];
     }
   });
+  const [orderData, setOrderData] = useState<AddressData | null>(null);
 
   const cartTotalQuantity = cartItems.length;
   const cartItemTotalPrice = cartItems.reduce((total, cart) => {
@@ -99,8 +114,11 @@ export function CartProvider({ children }: CartProviderProps) {
     } catch (error) {
       console.error("Erro ao salvar no localStorage:", error);
     }
-    
   }, [cartItems]);
+
+  function clearCart() {
+    setCartItems([]);
+  }
 
   return (
     <CartContext.Provider
@@ -111,6 +129,9 @@ export function CartProvider({ children }: CartProviderProps) {
         cartItemTotalPrice,
         removeCoffeeToCart,
         updateQuantityCoffeeToCart,
+        orderData,
+        setOrderData,
+        clearCart,
       }}
     >
       {children}
