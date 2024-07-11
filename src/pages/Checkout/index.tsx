@@ -1,14 +1,14 @@
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FaCartPlus } from "react-icons/fa";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { Counter } from "../../components/Counter";
 import { priceFormatter } from "../../utils/formatter";
 import { useCart } from "../../hooks/UseCart";
 import { TextInput } from "../../components/TextInput";
 import {
   PiCurrencyDollar,
-  PiMoney,
+  PiPixLogo,
   PiTrash,
   PiMapPinLineLight,
   PiCreditCard,
@@ -37,28 +37,50 @@ import {
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AddressFormSchema = z.object({
-  cep: z.string(),
+  cep: z
+    .string()
+    .min(8, { message: "O campo CEP deve ter no mínimo 8 números." })
+    .max(8),
   street: z.string(),
-  number: z.number(),
-  complement: z.string(),
+  number: z
+    .string()
+    .min(1, { message: "O campo Número deve ser preenchido." })
+    .refine((value) => !isNaN(Number(value)), {
+      message: "O campo Número deve ser um número.",
+    }),
+  complement: z.string().optional(),
   city: z.string(),
   neighborhood: z.string(),
   uf: z.string(),
+  paymentType: z.enum(["pix", "credit-card", "debit-card"]),
 });
 
 type AddressFormInput = z.infer<typeof AddressFormSchema>;
 export function Checkout() {
-  const { register, handleSubmit, watch, formState, reset, setFocus, setValue } =
-    useForm<AddressFormInput>({ resolver: zodResolver(AddressFormSchema) });
+  const {
+    control,
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isSubmitting },
+    reset,
+    setFocus,
+    setValue,
+  } = useForm<AddressFormInput>({ resolver: zodResolver(AddressFormSchema) });
 
   const {
     cartItems,
     cartItemTotalPrice,
     removeCoffeeToCart,
     updateQuantityCoffeeToCart,
+    setOrderData,
+    clearCart,
   } = useCart();
+
+  const navigate = useNavigate();
 
   const valueOfDelivery = cartItemTotalPrice / 10;
   const totalValueWithDelivery = cartItemTotalPrice + valueOfDelivery;
@@ -73,45 +95,51 @@ export function Checkout() {
     updateQuantityCoffeeToCart("decrease", coffeeId);
   }
 
-  async function handleSendingOrder() {}
+  async function handleSendingOrder(data: AddressFormInput) {
+    setOrderData(data);
+    clearCart();
+    navigate("/success");
+  }
 
- async function handleFetchCep() {
-   const cep = watch("cep");
+  async function handleFetchCep() {
+    const cep = watch("cep");
 
-   try {
-     await toast.promise(
-       axios
-         .get(`https://brasilapi.com.br/api/cep/v1/${cep}`)
-         .then((response) => {
-           setValue("cep", cep);
-           setValue("street", response.data.street);
-           setValue("city", response.data.city);
-           setValue("neighborhood", response.data.neighborhood);
-           setValue("uf", response.data.state);
+    try {
+      if (cep.length === 8) {
+        await toast.promise(
+          axios
+            .get(`https://brasilapi.com.br/api/cep/v1/${cep}`)
+            .then((response) => {
+              setValue("cep", cep);
+              setValue("street", response.data.street);
+              setValue("city", response.data.city);
+              setValue("neighborhood", response.data.neighborhood);
+              setValue("uf", response.data.state);
 
-           setFocus("number");
-           setInputsDisabled(false);
-         }),
-       {
-         pending: "Buscando CEP...",
-         success: "CEP encontrado.",
-         error: "CEP não encontrado... 🤯",
-       }
-     );
-   } catch (error) {
-     console.error("Erro ao buscar CEP:", error);
-     setFocus("cep");
-     reset({
-       cep: "",
-       street: "",
-       complement: "",
-       city: "",
-       neighborhood: "",
-       uf: "",
-     });
-     toast.error("CEP não encontrado... 🤯");
-   }
- }
+              setFocus("number");
+              setInputsDisabled(false);
+            }),
+          {
+            pending: "Buscando CEP...",
+            success: "CEP encontrado.",
+            error: "CEP não encontrado... 🤯",
+          }
+        );
+      }
+    } catch (error) {
+      console.error("Erro ao buscar CEP:", error);
+      setFocus("cep");
+      reset({
+        cep: "",
+        street: "",
+        complement: "",
+        city: "",
+        neighborhood: "",
+        uf: "",
+      });
+      toast.error("CEP não encontrado... 🤯");
+    }
+  }
 
   return (
     <CheckoutContainer>
@@ -130,11 +158,13 @@ export function Checkout() {
               <TextInput
                 placeholder="CEP"
                 className="cep"
+                type="number"
                 {...register("cep")}
                 onButtonClick={handleFetchCep}
-                required
                 ButtonSearch
               />
+              {errors.cep && <span>{errors.cep.message}</span>}
+
               <TextInput
                 placeholder="Rua"
                 {...register("street")}
@@ -146,7 +176,6 @@ export function Checkout() {
                   placeholder="Número"
                   className="number"
                   {...register("number")}
-                  required
                 />
                 <TextInput
                   placeholder="Complemento"
@@ -179,6 +208,7 @@ export function Checkout() {
               </div>
             </InputWrapper>
           </AddressContainer>
+
           <PaymentContainer>
             <Heading variant="payment">
               <PiCurrencyDollar />
@@ -190,20 +220,32 @@ export function Checkout() {
                 </p>
               </div>
             </Heading>
-            <PaymentType>
-              <PaymentTypeButton variant="credit-card" value="credit-card">
-                <PiCreditCard />
-                <span>Cartão de crédito</span>
-              </PaymentTypeButton>
-              <PaymentTypeButton variant="debit-card" value="debit-card">
-                <PiBank />
-                <span>Cartão de Débito</span>
-              </PaymentTypeButton>
-              <PaymentTypeButton variant="cash" value="cash">
-                <PiMoney />
-                <span>Dinheiro</span>
-              </PaymentTypeButton>
-            </PaymentType>
+
+            <Controller
+              control={control}
+              name="paymentType"
+              render={({ field }) => {
+                return (
+                  <PaymentType onValueChange={field.onChange}>
+                    <PaymentTypeButton
+                      variant="credit-card"
+                      value="credit-card"
+                    >
+                      <PiCreditCard />
+                      <span>Cartão de crédito</span>
+                    </PaymentTypeButton>
+                    <PaymentTypeButton variant="debit-card" value="debit-card">
+                      <PiBank />
+                      <span>Cartão de Débito</span>
+                    </PaymentTypeButton>
+                    <PaymentTypeButton variant="pix" value="pix">
+                      <PiPixLogo />
+                      <span>Pix</span>
+                    </PaymentTypeButton>
+                  </PaymentType>
+                );
+              }}
+            />
           </PaymentContainer>
         </form>
       </FormContainer>
@@ -265,7 +307,7 @@ export function Checkout() {
             </CartTotalPrice>
           )}
           <CheckoutButton
-            disabled={cartItems.length < 1}
+            disabled={cartItems.length < 1 || isSubmitting}
             type="submit"
             form="order"
           >
