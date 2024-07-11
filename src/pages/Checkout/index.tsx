@@ -32,7 +32,7 @@ import {
   PaymentType,
   PaymentTypeButton,
   CartTotalPrice,
-  EmptyCard,
+  EmptyCart,
 } from "./styles";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -50,7 +50,7 @@ const AddressFormSchema = z.object({
 
 type AddressFormInput = z.infer<typeof AddressFormSchema>;
 export function Checkout() {
-  const { register, handleSubmit, formState, reset, setFocus, setValue } =
+  const { register, handleSubmit, watch, formState, reset, setFocus, setValue } =
     useForm<AddressFormInput>({ resolver: zodResolver(AddressFormSchema) });
 
   const {
@@ -73,50 +73,45 @@ export function Checkout() {
     updateQuantityCoffeeToCart("decrease", coffeeId);
   }
 
-  async function handleSendingOrder() {
-  }
+  async function handleSendingOrder() {}
 
-  async function handleFetchCep(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Enter") {
-      const cep = e.currentTarget.value;
+ async function handleFetchCep() {
+   const cep = watch("cep");
 
-      try {
-        const response = await axios.get(
-          `https://brasilapi.com.br/api/cep/v1/${cep}`
-        );
+   try {
+     await toast.promise(
+       axios
+         .get(`https://brasilapi.com.br/api/cep/v1/${cep}`)
+         .then((response) => {
+           setValue("cep", cep);
+           setValue("street", response.data.street);
+           setValue("city", response.data.city);
+           setValue("neighborhood", response.data.neighborhood);
+           setValue("uf", response.data.state);
 
-        await toast.promise(
-          new Promise((resolve) => setTimeout(resolve, 2000)),
-          {
-            pending: "Buscando CEP...",
-            success: "CEP encontrado.",
-            error: "Erro ao buscar este CEP...",
-          }
-        );
-
-        setValue("street", response.data.street);
-        setValue("city", response.data.city);
-        setValue("neighborhood", response.data.neighborhood);
-        setValue("uf", response.data.state);
-        setValue("cep", cep);
-
-        setFocus("number");
-        setInputsDisabled(false);
-      } catch (error) {
-        console.error("Erro ao buscar CEP:", error);
-        setFocus("cep");
-        reset({
-          cep: "",
-          street: "",
-          complement: "",
-          city: "",
-          neighborhood: "",
-          uf: "",
-        });
-        toast.error("Erro ao buscar CEP 🤯");
-      }
-    }
-  }
+           setFocus("number");
+           setInputsDisabled(false);
+         }),
+       {
+         pending: "Buscando CEP...",
+         success: "CEP encontrado.",
+         error: "CEP não encontrado... 🤯",
+       }
+     );
+   } catch (error) {
+     console.error("Erro ao buscar CEP:", error);
+     setFocus("cep");
+     reset({
+       cep: "",
+       street: "",
+       complement: "",
+       city: "",
+       neighborhood: "",
+       uf: "",
+     });
+     toast.error("CEP não encontrado... 🤯");
+   }
+ }
 
   return (
     <CheckoutContainer>
@@ -136,8 +131,9 @@ export function Checkout() {
                 placeholder="CEP"
                 className="cep"
                 {...register("cep")}
-                onKeyDown={handleFetchCep}
-                optionText="Pressione Enter para buscar"
+                onButtonClick={handleFetchCep}
+                required
+                ButtonSearch
               />
               <TextInput
                 placeholder="Rua"
@@ -150,12 +146,13 @@ export function Checkout() {
                   placeholder="Número"
                   className="number"
                   {...register("number")}
+                  required
                 />
                 <TextInput
                   placeholder="Complemento"
                   {...register("complement")}
                   disabled={inputsDisabled}
-                  optionText="Opcional"
+                  OptionalText="Opcional"
                 />
               </div>
               <div>
@@ -164,17 +161,20 @@ export function Checkout() {
                   className="neighborhood"
                   {...register("neighborhood")}
                   disabled={inputsDisabled}
+                  required
                 />
                 <TextInput
                   placeholder="Cidade"
                   {...register("city")}
                   disabled={inputsDisabled}
+                  required
                 />
                 <TextInput
                   placeholder="UF"
                   className="uf"
                   {...register("uf")}
                   disabled={inputsDisabled}
+                  required
                 />
               </div>
             </InputWrapper>
@@ -244,10 +244,10 @@ export function Checkout() {
               ))}
           </div>
           {cartItems.length === 0 ? (
-            <EmptyCard to="/">
+            <EmptyCart to="/">
               <FaCartPlus size={84} />
               <p>Carrinho vazio, clique para voltar a página inicial</p>
-            </EmptyCard>
+            </EmptyCart>
           ) : (
             <CartTotalPrice>
               <div>

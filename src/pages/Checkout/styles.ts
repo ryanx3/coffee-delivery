@@ -208,6 +208,7 @@ export const CoffeeWrapper = styled.div`
     align-self: flex-start;
     ${mixins.fonts.textM}
     font-weight: bold;
+    white-space: nowrap;
   }
 `;
 
@@ -303,7 +304,7 @@ export const CheckoutButton = styled.button`
   }
 `;
 
-export const EmptyCard = styled(Link)`
+export const EmptyCart = styled(Link)`
   position: absolute;
   top: 50%;
   left: 50%;
@@ -314,11 +315,11 @@ export const EmptyCard = styled(Link)`
     color: inherit;
   }
 
-  p {
+  > p {
     ${mixins.fonts.titleXS}
   }
 
-  svg {
+  > svg {
     fill: ${({ theme }) => theme.colors.purple};
   }
 `;
