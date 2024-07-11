@@ -3,9 +3,24 @@ import { PiCurrencyDollar, PiMapPinFill, PiClockFill } from "react-icons/pi";
 import { SuccessContainer, Heading, Items, Order, Info } from "./styles";
 import { useTheme } from "styled-components";
 import { SuccessImage } from "../../assets/success-img";
+import { useCart } from "../../hooks/UseCart";
+import { useNavigate } from "react-router-dom";
+
+const paymentTypeMap = {
+  "credit-card": "Cartão de crédito",
+  "debit-card": "Cartão de Débito",
+  "pix": "Pix",
+};
 
 export function Success() {
   const theme = useTheme();
+  const { orderData } = useCart();
+  const navigate = useNavigate()
+
+  if(!orderData) {
+    navigate("/")
+  }
+
   return (
     <SuccessContainer>
       <Order>
@@ -23,9 +38,14 @@ export function Success() {
               />
               <div>
                 <span>
-                  Entrega em <strong>Rua João Daniel Martinelli, 102</strong>
+                  Entrega em{" "}
+                  <strong>
+                    {orderData?.street}, {orderData?.number}
+                  </strong>
                 </span>
-                <span>Farrapos - Porto Alegre, RS</span>
+                <span>
+                  {orderData?.neighborhood} - {orderData?.city}, {orderData?.uf}
+                </span>
               </div>
             </div>
 
@@ -48,8 +68,8 @@ export function Success() {
                 style={{ backgroundColor: theme.colors.yellow }}
               />
               <div>
-                <span>Pagamento na entrega</span>
-                <strong>Cartão de crédito</strong>
+                <span>Método de pagamento</span>
+                <strong>{orderData?.paymentType && paymentTypeMap[orderData.paymentType]}</strong>
               </div>
             </div>
           </Items>
