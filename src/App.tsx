@@ -12,8 +12,8 @@ export function App() {
     <ThemeProvider theme={defaultTheme}>
       <ToastContainer
         position="top-right"
-        autoClose={2000}
-        limit={3}
+        autoClose={1000}
+        limit={2}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
