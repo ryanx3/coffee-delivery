@@ -84,11 +84,11 @@ export function CartProvider({ children }: CartProviderProps) {
       const filteredCoffee = cartItems.findIndex(
         (item) => item.id === coffeeId
       );
-      if (filteredCoffee <= 0) {
+      if (filteredCoffee >= 0) {
         const coffee = draft[filteredCoffee];
         if (type === "increase") {
           draft[filteredCoffee].quantity = coffee.quantity + 1;
-        } else {
+        } else if(type === "decrease") {
           draft[filteredCoffee].quantity = coffee.quantity - 1;
         }
       }
