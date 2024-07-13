@@ -24,7 +24,7 @@ export interface CartContextProps {
 export interface AddressData {
   cep: string;
   street: string;
-  number: string;
+  number: number;
   complement?: string;
   city: string;
   neighborhood: string;
