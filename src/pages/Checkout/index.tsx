@@ -42,8 +42,8 @@ import { useNavigate } from "react-router-dom";
 const AddressFormSchema = z.object({
   cep: z.number({ invalid_type_error: "Informe o CEP" }),
   street: z.string().min(1, "Informe a rua"),
-  number: z.string().min(1, "Informe o número"),
-  complement: z.string(),
+  number: z.number().min(1, "Informe o número"),
+  complement: z.string().optional(),
   neighborhood: z.string().min(1, "Informe o bairro"),
   city: z.string().min(1, "Informe a cidade"),
   uf: z.string().min(1, "Informe a UF"),
@@ -74,7 +74,7 @@ export function Checkout() {
     removeCoffeeToCart,
     updatedQuantityOfCoffees,
     setOrderData,
-    // clearCart,
+    clearCart,
   } = useCart();
 
   const navigate = useNavigate();
@@ -94,7 +94,7 @@ export function Checkout() {
 
   async function handleSendingOrder(data: OrderInfo) {
     setOrderData(data);
-    // clearCart();
+    clearCart();
     navigate("/success");
   }
 
@@ -151,7 +151,9 @@ export function Checkout() {
             <InputWrapper>
               <Input
                 placeholder="CEP"
-                {...register("cep")}
+                {...register("cep", {
+                  setValueAs: (value: string) => parseInt(value, 10),
+                })}
                 type="number"
                 onBlur={handleFetchCep}
                 helperText={errors.cep?.message}
@@ -228,14 +230,11 @@ export function Checkout() {
                       <PiPixLogo />
                       <span>Pix</span>
                     </PaymentTypeButton>
-                    <PaymentTypeButton
-                      variant="credit-card"
-                      value="credit-card"
-                    >
+                    <PaymentTypeButton variant="credit" value="credit">
                       <PiCreditCard />
                       <span>Cartão de crédito</span>
                     </PaymentTypeButton>
-                    <PaymentTypeButton variant="debit-card" value="debit-card">
+                    <PaymentTypeButton variant="debit" value="debit">
                       <PiBank />
                       <span>Cartão de Débito</span>
                     </PaymentTypeButton>

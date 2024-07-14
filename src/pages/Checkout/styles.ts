@@ -114,7 +114,7 @@ export const PaymentType = styled(RadioGroup.Root)`
 `;
 
 interface PaymentTypeButtonProps {
-  variant: "credit-card" | "debit-card" | "pix";
+  variant: "credit" | "debit" | "pix";
 }
 export const PaymentTypeButton = styled(RadioGroup.Item)<PaymentTypeButtonProps>`
   display: flex;

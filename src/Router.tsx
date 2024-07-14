@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import { Home } from "./pages/Home";
 import { AppLayout } from "./Layouts/AppLayout/default";
 import { Checkout } from "./pages/Checkout";
-import { Success } from "./pages/Sucess";
+import { Success } from "./pages/Success";
 
 export function Router() {
   return (
