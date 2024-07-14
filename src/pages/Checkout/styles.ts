@@ -73,21 +73,17 @@ export const InputWrapper = styled.div`
   flex-direction: column;
   gap: 1rem;
 
+  @media (${breakpoints.sm}) {
+    div {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
   div {
     display: flex;
-    gap: 16px;
     width: 100%;
-  }
-
-  .cep,
-  .neighborhood,
-  .number {
-    min-width: 12.5rem;
-    width: 12.5rem;
-  }
-
-  .uf {
-    width: 6.25rem;
+    gap: 1rem;
   }
 
   > span {
@@ -120,9 +116,7 @@ export const PaymentType = styled(RadioGroup.Root)`
 interface PaymentTypeButtonProps {
   variant: "credit-card" | "debit-card" | "pix";
 }
-export const PaymentTypeButton = styled(
-  RadioGroup.Item
-)<PaymentTypeButtonProps>`
+export const PaymentTypeButton = styled(RadioGroup.Item)<PaymentTypeButtonProps>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -151,6 +145,7 @@ export const PaymentTypeButton = styled(
     background-color: ${({ theme }) => theme.colors["purple-light"]};
     border: 1px solid ${({ theme }) => theme.colors.purple};
   }
+
 
   &:not([data-state="checked"]):hover {
     background-color: ${({ theme }) => theme.colors["base-hover"]};
@@ -196,7 +191,6 @@ export const CoffeeWrapper = styled.div`
   justify-content: space-between;
   border-bottom: 1px solid ${({ theme }) => theme.colors["base-button"]};
   padding-bottom: 1.5rem;
-
 
   div:nth-child(1) {
     display: flex;
@@ -312,12 +306,14 @@ export const CheckoutButton = styled.button`
 `;
 
 export const EmptyCart = styled(Link)`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   text-align: center;
   text-decoration: none;
+  margin-bottom: 1.5rem;
+
   &:visited {
     color: inherit;
   }

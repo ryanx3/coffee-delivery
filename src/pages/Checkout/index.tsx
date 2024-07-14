@@ -5,7 +5,7 @@ import { Controller, useForm } from "react-hook-form";
 import { Counter } from "../../components/Counter";
 import { priceFormatter } from "../../utils/formatter";
 import { useCart } from "../../hooks/UseCart";
-import { TextInput } from "../../components/TextInput";
+import { Input } from "../../components/Input";
 import {
   PiCurrencyDollar,
   PiPixLogo,
@@ -40,25 +40,19 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const AddressFormSchema = z.object({
-  cep: z
-    .string()
-    .min(8, { message: "O campo CEP deve ter no mínimo 8 números." })
-    .max(8),
-  street: z.string(),
-  number: z
-    .string()
-    .min(1, { message: "O campo Número deve ser preenchido." })
-    .refine((value) => !isNaN(Number(value)), {
-      message: "O campo Número deve ser um número.",
-    }),
-  complement: z.string().optional(),
-  city: z.string(),
-  neighborhood: z.string(),
-  uf: z.string(),
-  paymentType: z.enum(["pix", "credit-card", "debit-card"]),
+  cep: z.number({ invalid_type_error: "Informe o CEP" }),
+  street: z.string().min(1, "Informe a rua"),
+  number: z.string().min(1, "Informe o número"),
+  complement: z.string(),
+  neighborhood: z.string().min(1, "Informe o bairro"),
+  city: z.string().min(1, "Informe a cidade"),
+  uf: z.string().min(1, "Informe a UF"),
+  paymentMethod: z.enum(["credit", "debit", "pix"], {
+    invalid_type_error: "Informe um método de pagamento",
+  }),
 });
 
-type AddressFormInput = z.infer<typeof AddressFormSchema>;
+export type OrderInfo = z.infer<typeof AddressFormSchema>;
 export function Checkout() {
   const {
     control,
@@ -69,15 +63,18 @@ export function Checkout() {
     reset,
     setFocus,
     setValue,
-  } = useForm<AddressFormInput>({ resolver: zodResolver(AddressFormSchema) });
+  } = useForm<OrderInfo>({
+    resolver: zodResolver(AddressFormSchema),
+    defaultValues: { paymentMethod: "pix" },
+  });
 
   const {
     cartItems,
     cartItemTotalPrice,
     removeCoffeeToCart,
-    updateQuantityCoffeeToCart,
+    updatedQuantityOfCoffees,
     setOrderData,
-    clearCart,
+    // clearCart,
   } = useCart();
 
   const navigate = useNavigate();
@@ -88,16 +85,16 @@ export function Checkout() {
   const [inputsDisabled, setInputsDisabled] = useState(true);
 
   function handleIncreaseQuantity(coffeeId: number) {
-    updateQuantityCoffeeToCart("increase", coffeeId);
+    updatedQuantityOfCoffees("increase", coffeeId);
   }
 
   function handleDecreaseQuantity(coffeeId: number) {
-    updateQuantityCoffeeToCart("decrease", coffeeId);
+    updatedQuantityOfCoffees("decrease", coffeeId);
   }
 
-  async function handleSendingOrder(data: AddressFormInput) {
+  async function handleSendingOrder(data: OrderInfo) {
     setOrderData(data);
-    clearCart();
+    // clearCart();
     navigate("/success");
   }
 
@@ -105,39 +102,36 @@ export function Checkout() {
     const cep = watch("cep");
 
     try {
-      if (cep.length === 8) {
-        await toast.promise(
-          axios
-            .get(`https://brasilapi.com.br/api/cep/v1/${cep}`)
-            .then((response) => {
-              setValue("cep", cep);
-              setValue("street", response.data.street);
-              setValue("city", response.data.city);
-              setValue("neighborhood", response.data.neighborhood);
-              setValue("uf", response.data.state);
+      await toast.promise(
+        axios
+          .get(`https://brasilapi.com.br/api/cep/v1/${cep}`)
+          .then((response) => {
+            setValue("cep", cep);
+            setValue("street", response.data.street);
+            setValue("city", response.data.city);
+            setValue("neighborhood", response.data.neighborhood);
+            setValue("uf", response.data.state);
 
-              setFocus("number");
-              setInputsDisabled(false);
-            }),
-          {
-            pending: "Buscando CEP...",
-            success: "CEP encontrado.",
-            error: "CEP não encontrado... 🤯",
-          }
-        );
-      }
+            setInputsDisabled(false);
+            setFocus("number");
+          }),
+        {
+          pending: "Buscando CEP...",
+          success: "CEP encontrado.",
+          error: "Digite um CEP válido.",
+        }
+      );
     } catch (error) {
       console.error("Erro ao buscar CEP:", error);
       setFocus("cep");
       reset({
-        cep: "",
+        cep: 0,
         street: "",
         complement: "",
         city: "",
         neighborhood: "",
         uf: "",
       });
-      toast.error("CEP não encontrado... 🤯");
     }
   }
 
@@ -155,55 +149,55 @@ export function Checkout() {
               </div>
             </Heading>
             <InputWrapper>
-              <TextInput
+              <Input
                 placeholder="CEP"
-                className="cep"
-                type="number"
                 {...register("cep")}
-                onButtonClick={handleFetchCep}
-                ButtonSearch
+                type="number"
+                onBlur={handleFetchCep}
+                helperText={errors.cep?.message}
               />
-              {errors.cep && <span>{errors.cep.message}</span>}
 
-              <TextInput
+              <Input
                 placeholder="Rua"
                 {...register("street")}
                 disabled={inputsDisabled}
-                required
+                helperText={errors.street?.message}
               />
               <div>
-                <TextInput
+                <Input
                   placeholder="Número"
-                  className="number"
-                  {...register("number")}
+                  {...register("number", {
+                    setValueAs: (value: string) => parseInt(value, 10),
+                  })}
+                  helperText={errors.number?.message}
                 />
-                <TextInput
+                <Input
                   placeholder="Complemento"
                   {...register("complement")}
                   disabled={inputsDisabled}
-                  OptionalText="Opcional"
+                  optionalText
                 />
               </div>
               <div>
-                <TextInput
+                <Input
                   placeholder="Bairro"
-                  className="neighborhood"
                   {...register("neighborhood")}
                   disabled={inputsDisabled}
-                  required
+                  helperText={errors.neighborhood?.message}
                 />
-                <TextInput
+
+                <Input
                   placeholder="Cidade"
                   {...register("city")}
                   disabled={inputsDisabled}
-                  required
+                  helperText={errors.city?.message}
                 />
-                <TextInput
+                <Input
                   placeholder="UF"
                   className="uf"
                   {...register("uf")}
+                  helperText={errors.uf?.message}
                   disabled={inputsDisabled}
-                  required
                 />
               </div>
             </InputWrapper>
@@ -223,10 +217,17 @@ export function Checkout() {
 
             <Controller
               control={control}
-              name="paymentType"
+              name="paymentMethod"
               render={({ field }) => {
                 return (
-                  <PaymentType onValueChange={field.onChange}>
+                  <PaymentType
+                    onValueChange={field.onChange}
+                    value={field.value}
+                  >
+                    <PaymentTypeButton variant="pix" value="pix">
+                      <PiPixLogo />
+                      <span>Pix</span>
+                    </PaymentTypeButton>
                     <PaymentTypeButton
                       variant="credit-card"
                       value="credit-card"
@@ -238,10 +239,6 @@ export function Checkout() {
                       <PiBank />
                       <span>Cartão de Débito</span>
                     </PaymentTypeButton>
-                    <PaymentTypeButton variant="pix" value="pix">
-                      <PiPixLogo />
-                      <span>Pix</span>
-                    </PaymentTypeButton>
                   </PaymentType>
                 );
               }}
@@ -249,6 +246,7 @@ export function Checkout() {
           </PaymentContainer>
         </form>
       </FormContainer>
+
       <CartContainer>
         <Title>Cafés selecionados</Title>
         <CartContent>
@@ -285,12 +283,15 @@ export function Checkout() {
                 </CoffeeWrapper>
               ))}
           </div>
-          {cartItems.length === 0 ? (
+
+          {cartItems.length <= 0 && (
             <EmptyCart to="/">
               <FaCartPlus size={84} />
               <p>Carrinho vazio, clique para voltar a página inicial</p>
             </EmptyCart>
-          ) : (
+          )}
+
+          {cartItems.length !== 0 && (
             <CartTotalPrice>
               <div>
                 <span>Total de itens</span>
@@ -306,8 +307,9 @@ export function Checkout() {
               </div>
             </CartTotalPrice>
           )}
+
           <CheckoutButton
-            disabled={cartItems.length < 1 || isSubmitting}
+            disabled={cartItems.length === 0 || isSubmitting || inputsDisabled}
             type="submit"
             form="order"
           >
