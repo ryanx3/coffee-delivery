@@ -4,6 +4,7 @@ export enum ActionTypes {
   ADD_COFFEE = "ADD_COFFEE",
   REMOVE_COFFEE = "REMOVE_COFFEE",
   UPDATE_QUANTITY_COFFEE = "UPDATE_QUANTITY_COFFEE",
+  CLEAR_CART = "CLEAR_CART",
 }
 
 export type Actions =
@@ -25,8 +26,11 @@ export type Actions =
         coffeeId: CartItem["id"];
         type: "decrease" | "increase";
       };
+    }
+  | {
+      type: ActionTypes.CLEAR_CART;
     };
-    
+
 export function addItemAction(coffee: CartItem) {
   return {
     type: ActionTypes.ADD_COFFEE,
@@ -45,7 +49,7 @@ export function removeItemAction(coffeeId: CartItem["id"]) {
   } as Actions;
 }
 
-export function updatedQuantity(
+export function updatedQuantityAction(
   coffeeId: CartItem["id"],
   type: "decrease" | "increase"
 ) {
@@ -55,5 +59,11 @@ export function updatedQuantity(
       coffeeId,
       type,
     },
+  } as Actions;
+}
+
+export function clearCartAction() {
+  return {
+    type: ActionTypes.CLEAR_CART,
   } as Actions;
 }

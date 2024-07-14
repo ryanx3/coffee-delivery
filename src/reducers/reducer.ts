@@ -41,6 +41,9 @@ export function cartReducer(state: CartItem[], action: Actions) {
         }
       });
 
+    case ActionTypes.CLEAR_CART:
+      return [];
+
     default:
       return state;
   }
