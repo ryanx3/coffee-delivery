@@ -7,18 +7,18 @@ import { useCart } from "../../hooks/UseCart";
 import { useNavigate } from "react-router-dom";
 
 const paymentTypeMap = {
-  "credit-card": "Cartão de crédito",
-  "debit-card": "Cartão de Débito",
+  "credit": "Cartão de crédito",
+  "debit": "Cartão de Débito",
   "pix": "Pix",
 };
 
 export function Success() {
   const theme = useTheme();
   const { orderData } = useCart();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  if(!orderData) {
-    navigate("/")
+  if (!orderData) {
+    navigate("/");
   }
 
   return (
@@ -69,7 +69,10 @@ export function Success() {
               />
               <div>
                 <span>Método de pagamento</span>
-                <strong>{orderData?.paymentType && paymentTypeMap[orderData.paymentType]}</strong>
+                <strong>
+                  {orderData?.paymentMethod &&
+                    paymentTypeMap[orderData.paymentMethod]}
+                </strong>
               </div>
             </div>
           </Items>
