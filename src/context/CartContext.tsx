@@ -1,5 +1,4 @@
 import {
-  createContext,
   ReactNode,
   useEffect,
   useReducer,
@@ -8,6 +7,7 @@ import {
 import { CardCoffee } from "../components/Card";
 import { OrderInfo } from "../pages/Checkout";
 import { cartReducer } from "../reducers/reducer";
+import { createContext } from "use-context-selector";
 import {
   addItemAction,
   clearCartAction,
