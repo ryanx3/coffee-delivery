@@ -16,7 +16,7 @@ import {
   Tags,
   Title,
 } from "./styles";
-import { useCart } from "../../hooks/UseCart";
+import { useCart } from "../../hooks/useCart";
 
 export interface CardCoffee {
   id: number;
