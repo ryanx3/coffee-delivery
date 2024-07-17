@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { toast } from "react-toastify";
 import { PiShoppingCartFill } from "react-icons/pi";
 
@@ -35,26 +35,27 @@ export function Card({ coffee }: CardProps) {
   const { AddCoffeeToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
 
-  function handleAddCoffeeToCart() {
-    try {
-      const coffeeToAdd = {
-        ...coffee,
-        quantity,
-      };
-      AddCoffeeToCart(coffeeToAdd);
-      toast("Café adicionado ao carrinho.");
-    } catch (error) {
-      toast.error("Não foi possível adicionar esse café ao seu carrinho");
-      console.error(error);
-    }
-  }
+   const handleAddCoffeeToCart = useCallback(() => {
+     try {
+       const coffeeToAdd = {
+         ...coffee,
+         quantity,
+       };
+       AddCoffeeToCart(coffeeToAdd);
+       toast("Café adicionado ao carrinho.");
+     } catch (error) {
+       toast.error("Não foi possível adicionar esse café ao seu carrinho");
+       console.error(error);
+     }
+   }, [AddCoffeeToCart, coffee, quantity]);
 
-  function handleIncreaseQuantity() {
-    setQuantity((prev) => prev + 1);
-  }
-  function handleDecreaseQuantity() {
-    setQuantity((prev) => prev - 1);
-  }
+   const handleIncreaseQuantity = useCallback(() => {
+     setQuantity((prev) => prev + 1);
+   }, []);
+
+   const handleDecreaseQuantity = useCallback(() => {
+     setQuantity((prev) => prev - 1);
+   }, []);
 
   return (
     <CardContainer>
