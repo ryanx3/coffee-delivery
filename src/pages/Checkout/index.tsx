@@ -4,7 +4,7 @@ import { FaCartPlus } from "react-icons/fa";
 import { Controller, useForm } from "react-hook-form";
 import { Counter } from "../../components/Counter";
 import { priceFormatter } from "../../utils/formatter";
-import { useCart } from "../../hooks/UseCart";
+import { useCart } from "../../hooks/useCart";
 import { Input } from "../../components/Input";
 import {
   PiCurrencyDollar,

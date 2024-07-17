@@ -3,13 +3,13 @@ import { PiCurrencyDollar, PiMapPinFill, PiClockFill } from "react-icons/pi";
 import { SuccessContainer, Heading, Items, Order, Info } from "./styles";
 import { useTheme } from "styled-components";
 import { SuccessImage } from "../../assets/success-img";
-import { useCart } from "../../hooks/UseCart";
+import { useCart } from "../../hooks/useCart";
 import { useNavigate } from "react-router-dom";
 
 const paymentTypeMap = {
-  "credit": "Cartão de crédito",
-  "debit": "Cartão de Débito",
-  "pix": "Pix",
+  credit: "Cartão de crédito",
+  debit: "Cartão de Débito",
+  pix: "Pix",
 };
 
 export function Success() {

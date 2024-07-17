@@ -3,7 +3,7 @@ import { LogoHeader } from "../../assets/logo";
 import { Link } from "react-router-dom";
 
 import { HeaderContainer, HeaderNav } from "./styles";
-import { useCart } from "../../hooks/UseCart";
+import { useCart } from "../../hooks/useCart";
 
 export function Header() {
   const { cartTotalQuantity, orderData } = useCart();
