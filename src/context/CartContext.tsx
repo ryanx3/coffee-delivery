@@ -1,4 +1,11 @@
-import { ReactNode, useCallback, useEffect, useReducer, useState } from "react";
+import {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+} from "react";
 import { createContext } from "use-context-selector";
 import { CardCoffee } from "../components/Card";
 import { OrderInfo } from "../pages/Checkout";
@@ -47,15 +54,19 @@ export function CartProvider({ children }: CartProviderProps) {
 
   const [orderData, setOrderData] = useState<Order | null>(null);
 
-  const cartTotalQuantity = cartItems.reduce(
-    (total: number, item: CartItem) => total + item.quantity,
-    0
-  );
+  const cartTotalQuantity = useMemo(() => {
+    return cartItems.reduce(
+      (total: number, item: CartItem) => total + item.quantity,
+      0
+    );
+  }, [cartItems]);
 
-  const cartItemTotalPrice = cartItems.reduce(
-    (total: number, cart: CartItem) => total + cart.price * cart.quantity,
-    0
-  );
+  const cartItemTotalPrice = useMemo(() => {
+    return cartItems.reduce(
+      (total: number, cart: CartItem) => total + cart.price * cart.quantity,
+      0
+    );
+  }, [cartItems]);
 
   const AddCoffeeToCart = useCallback(
     (coffee: CartItem) => {
