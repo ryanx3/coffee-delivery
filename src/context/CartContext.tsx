@@ -1,13 +1,8 @@
-import {
-  ReactNode,
-  useEffect,
-  useReducer,
-  useState,
-} from "react";
+import { ReactNode, useCallback, useEffect, useReducer, useState } from "react";
+import { createContext } from "use-context-selector";
 import { CardCoffee } from "../components/Card";
 import { OrderInfo } from "../pages/Checkout";
 import { cartReducer } from "../reducers/reducer";
-import { createContext } from "use-context-selector";
 import {
   addItemAction,
   clearCartAction,
@@ -47,44 +42,45 @@ const COFFEE_ITEMS_STORAGE_KEY = "coffeeDelivery:cartItems";
 export function CartProvider({ children }: CartProviderProps) {
   const [cartItems, dispatchCartItems] = useReducer(cartReducer, [], () => {
     const storedCartItem = localStorage.getItem(COFFEE_ITEMS_STORAGE_KEY);
-    if (storedCartItem) {
-      return JSON.parse(storedCartItem);
-    }
-    return [];
+    return storedCartItem ? JSON.parse(storedCartItem) : [];
   });
 
   const [orderData, setOrderData] = useState<Order | null>(null);
-  
+
   const cartTotalQuantity = cartItems.reduce(
     (total: number, item: CartItem) => total + item.quantity,
     0
   );
 
   const cartItemTotalPrice = cartItems.reduce(
-    (total: number, cart: CartItem) => {
-      return total + cart.price * cart.quantity;
-    },
+    (total: number, cart: CartItem) => total + cart.price * cart.quantity,
     0
   );
 
-  function AddCoffeeToCart(coffee: CartItem) {
-    dispatchCartItems(addItemAction(coffee));
-  }
+  const AddCoffeeToCart = useCallback(
+    (coffee: CartItem) => {
+      dispatchCartItems(addItemAction(coffee));
+    },
+    [dispatchCartItems]
+  );
 
-  function updatedQuantityOfCoffees(
-    type: "decrease" | "increase",
-    coffeeId: CartItem["id"]
-  ) {
-    dispatchCartItems(updatedQuantityAction(coffeeId, type));
-  }
+  const updatedQuantityOfCoffees = useCallback(
+    (type: "decrease" | "increase", coffeeId: number) => {
+      dispatchCartItems(updatedQuantityAction(coffeeId, type));
+    },
+    [dispatchCartItems]
+  );
 
-  function removeCoffeeToCart(coffeeRemoved: CartItem["id"]) {
-    dispatchCartItems(removeItemAction(coffeeRemoved));
-  }
+  const removeCoffeeToCart = useCallback(
+    (coffeeRemoved: number) => {
+      dispatchCartItems(removeItemAction(coffeeRemoved));
+    },
+    [dispatchCartItems]
+  );
 
-  function clearCart() {
+  const clearCart = useCallback(() => {
     dispatchCartItems(clearCartAction());
-  }
+  }, [dispatchCartItems]);
 
   useEffect(() => {
     try {
