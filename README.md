@@ -1,6 +1,5 @@
 
-<img src="src/assets/logo.svg" alt="Logo da Coffee Delivery" width="85" height="40">
-
+![Logo da Coffee Delivery](src/assets/logo.tsx)
 
 # Coffee Delivery
 
