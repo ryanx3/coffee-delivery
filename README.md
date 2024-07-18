@@ -1,6 +1,3 @@
-
-![Logo da Coffee Delivery](src/assets/logo.tsx)
-
 # Coffee Delivery
 
 Coffee Delivery é uma aplicação para gerenciar pedidos de café, proporcionando uma interface amigável e animada. Este projeto foi desenvolvido com o objetivo de estudar técnicas estudadas e colocá-las em prática em um projeto.
