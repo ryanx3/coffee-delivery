@@ -35,27 +35,27 @@ export function Card({ coffee }: CardProps) {
   const { AddCoffeeToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
 
-   const handleAddCoffeeToCart = useCallback(() => {
-     try {
-       const coffeeToAdd = {
-         ...coffee,
-         quantity,
-       };
-       AddCoffeeToCart(coffeeToAdd);
-       toast("Café adicionado ao carrinho.");
-     } catch (error) {
-       toast.error("Não foi possível adicionar esse café ao seu carrinho");
-       console.error(error);
-     }
-   }, [AddCoffeeToCart, coffee, quantity]);
+  const handleAddCoffeeToCart = useCallback(() => {
+    try {
+      const coffeeToAdd = {
+        ...coffee,
+        quantity,
+      };
+      AddCoffeeToCart(coffeeToAdd);
+      toast("Café adicionado ao carrinho.");
+    } catch (error) {
+      toast.error("Não foi possível adicionar esse café ao seu carrinho");
+      console.error(error);
+    }
+  }, [AddCoffeeToCart, coffee, quantity]);
 
-   const handleIncreaseQuantity = useCallback(() => {
-     setQuantity((prev) => prev + 1);
-   }, []);
+  const handleIncreaseQuantity = useCallback(() => {
+    setQuantity((prev) => prev + 1);
+  }, []);
 
-   const handleDecreaseQuantity = useCallback(() => {
-     setQuantity((prev) => prev - 1);
-   }, []);
+  const handleDecreaseQuantity = useCallback(() => {
+    setQuantity((prev) => prev - 1);
+  }, []);
 
   return (
     <CardContainer>

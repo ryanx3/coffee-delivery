@@ -10,13 +10,12 @@ export const Container = styled.div`
 export const InputWrapper = styled.div`
   position: relative;
   display: flex;
-`
+`;
 export const InputField = styled.input<{ hasError: boolean }>`
   ${mixins.fonts.textS}
   background-color: ${({ theme }) => theme.colors["base-input"]};
   border: 2px solid ${({ theme }) => theme.colors["base-button"]};
   border-radius: 6px;
-
 
   color: ${({ theme }) => theme.colors["base-text"]};
   padding: 0.75rem;
@@ -63,4 +62,4 @@ export const OptionalText = styled.label`
   right: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
-  `;
+`;

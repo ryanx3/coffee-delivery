@@ -67,17 +67,17 @@ export const Price = styled.div`
 `;
 
 export const ButtonCart = styled.button`
-    display: flex;
+  display: flex;
 
-    background-color: ${({ theme }) => theme.colors["purple-dark"]};
-    border-radius: 6px;
-    padding: 0.5rem;
-    transition: background-color 0.2s ease-in-out;
+  background-color: ${({ theme }) => theme.colors["purple-dark"]};
+  border-radius: 6px;
+  padding: 0.5rem;
+  transition: background-color 0.2s ease-in-out;
 
-    &:hover {
-      background-color: ${({ theme }) => theme.colors.purple};
-    }
-    > svg {
-      fill: ${({ theme }) => theme.colors.white};
-    }
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.purple};
+  }
+  > svg {
+    fill: ${({ theme }) => theme.colors.white};
+  }
 `;
